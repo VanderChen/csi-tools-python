@@ -22,15 +22,23 @@ class WifiCsi:
         self.csi = csi
         pass
 
-
-def left_shift(in_num, data_length, shift_bit):
+def get_bit_num(in_num, data_length):
     max_value = (1 << data_length - 1) - 1
-    in_num = in_num << shift_bit
     if not -max_value-1 <= in_num <= max_value:
         out_num = (in_num + (max_value + 1)) % (2 * (max_value + 1)) - max_value - 1
     else:
         out_num = in_num
     return out_num
+    pass
+
+# def left_shift(in_num, shift_bit):
+#     max_value = (1 << data_length - 1) - 1
+#     in_num = in_num << shift_bit
+#     if not -max_value-1 <= in_num <= max_value:
+#         out_num = (in_num + (max_value + 1)) % (2 * (max_value + 1)) - max_value - 1
+#     else:
+#         out_num = in_num
+#     return out_num
 
 
 def read_bfee(in_bytes):
@@ -70,11 +78,8 @@ def read_bfee(in_bytes):
         remainder = index % 8
         for j in range(Nrx):
             for k in range(Ntx):
-                pr = ((payload[index // 8] >> remainder)
-                      ) | (left_shift(payload[index // 8+1], 8, (8-remainder)))
-                pi = ((payload[(index // 8)+1] >> remainder)
-                      ) | (left_shift(payload[(index // 8)+2], 8, (8-remainder)))
-
+                pr = get_bit_num((payload[index // 8] >> remainder),8) | get_bit_num((payload[index // 8+1] << (8-remainder)),8)
+                pi = get_bit_num((payload[(index // 8)+1] >> remainder),8) | get_bit_num((payload[(index // 8)+2] << (8-remainder)),8)
                 perm_csi[i][k][perm[j] - 1] = complex(pr, pi)
 
                 index += 16
@@ -90,9 +95,7 @@ def read_bfee(in_bytes):
     return temp_wifi_csi
 
 
-def main():
-    file_path = '../sample_data/test2-0.dat'
-
+def read_file(file_path):
     length = os.path.getsize(file_path)
     cur = 0
     count = 0
@@ -120,11 +123,5 @@ def main():
             csi_data.append(read_bfee(data))
 
             count += 1
-    for i in csi_data:
-        print(i.csi)
-        pass
-    pass
+    return csi_data
 
-
-if __name__ == '__main__':
-    main()
