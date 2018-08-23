@@ -18,7 +18,7 @@ class WifiCsi:
         self.noise = args[7]
         self.agc = args[8]
         self.perm = args[9]
-        self.fake_rate_n_flags = args[10]
+        self.rate = args[10]
         self.csi = csi
         pass
 
@@ -50,7 +50,7 @@ def read_bfee(in_bytes):
     rssi_a = in_bytes[10]
     rssi_b = in_bytes[11]
     rssi_c = in_bytes[12]
-    noise = in_bytes[13]
+    noise = get_bit_num(in_bytes[13],8)
     agc = in_bytes[14]
     antenna_sel = in_bytes[15]
     length = in_bytes[16] + (in_bytes[17] << 8)
