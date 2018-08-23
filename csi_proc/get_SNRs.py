@@ -4,45 +4,38 @@ import sys
 
 def get_mimo3_SNRs(csi):
     return csi
-    pass
 
 def get_mimo3_SNRs_sm(csi):
     return csi
-    pass
-
-def get_mimo2_SNRs(csi):
-    return csi
-    pass
 
 def mimo2_mmse(csi):
-    M = np.inv(np.conj(csi) * np.transpose(csi) + np.eye(2))
+    M = np.linalg.inv(np.dot(np.conj(csi),np.transpose(csi)) + np.eye(2))
     ret = 1 / np.diag(M) - 1
+    ret = np.real(ret)
     return ret
-    pass
 
-def get_mimo2_SNRs_sm(csi):
-    csi_size = csi.shape
-    if csi_size[0] < 2 or csi_size[1] < 2:
+def get_mimo2_SNRs(csi):
+    csi_size = csi.shape  # [S M N]
+    m = 30
+    if csi_size[1] < 2 or csi_size[2] < 2:
         sys.exit("CSI matrix must have at least 2 TX antennas and 2 RX antennas")
     csi = csi / np.sqrt(2)
-    if csi_size[0] == 2:
-        ret = np.zeros(1,2,5)
-        for i in range(csi_size[2]):
-            
+    if csi_size[1] == 2:
+        ret = np.zeros((csi_size[0],1,2))
+        for i in range(csi_size[0]):
+            ret[i][0] = mimo2_mmse(np.squeeze(csi[i][:][:]))
+    return ret
 
-            pass
-        pass
+def get_mimo2_SNRs_sm(csi):
+    
     return csi
-    pass
 
 def get_simo_SNRs(csi):
-    # ret = np.sum(np.multiply(csi,np.conj(csi)),keepdims=2)
     ret = np.multiply(csi,np.conj(csi))
     ret = np.sum(ret,axis=1)
     ret = np.sum(ret,axis=1,keepdims=True)
     ret = ret.real
     return ret
-    pass
 
 def get_eff_SNRs(csi):
     et = np.zeros(7,4) + np.spacing(1)
