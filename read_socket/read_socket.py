@@ -60,14 +60,14 @@ def sort_data(csi_list, make_count, read_count_per_make, csi_lock, count_gap):
             csi_lock.release()
 
 
-def main():
+def read_socket_start():
     make_count = 10
     read_count_per_make = 8
     sort_count = 1
     count_gap = 1000
 
     global so
-    so = ctypes.CDLL("./log_to_file.so")
+    so = ctypes.CDLL("csi-tools-python/c_lib/log_to_file.so")
     so.init_socket(b"log_data")
 
     read_event = []
@@ -115,6 +115,3 @@ def main():
     for p in sort_process:
         p.join()
 
-
-if __name__ == '__main__':
-    main()
