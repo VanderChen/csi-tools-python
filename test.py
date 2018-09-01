@@ -1,5 +1,4 @@
 from read_file.read_bf_file import read_file
-from csi_proc.get_scaled_csi import *
 
 def main():
     file_path = 'sample_data/test_data'
