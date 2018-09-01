@@ -41,30 +41,30 @@ def timestamp(csi):
 
 def sort_data(csi_list, make_count, read_count_per_make, csi_lock, count_gap):
     count = make_count * read_count_per_make
-    current_time = time.time()
-    out_count = 0
+    # current_time = time.time()
+    # out_count = 0
     while True:
-        if out_count > count_gap:
-            start_time = current_time
-            current_time = time.time()
-            print(count_gap / (current_time - start_time), "pkt/s")
-            out_count -= count_gap
+        # if out_count > count_gap:
+        #     start_time = current_time
+        #     current_time = time.time()
+        #     print(count_gap / (current_time - start_time), "pkt/s")
+        #     out_count -= count_gap
         if len(csi_list) >= count * 2:
 
             csi_lock.acquire()
             sorted_data = sorted(csi_list, key=timestamp)
             for csi in sorted_data[:count]:
-                out_data.put(csi)
-                # print(csi.timestamp_low)
+                # out_data.put(csi)
+                print(csi.timestamp_low)
                 pass
-            out_count += count
+            # out_count += count
             csi_list[:] = []
             csi_list.extend(sorted_data[count + 1:])
             csi_lock.release()
 
 
-def read_socket_start():
-    make_count = 20
+def main():
+    make_count = 10
     read_count_per_make = 6
     sort_count = 1
     count_gap = 1000
@@ -118,3 +118,5 @@ def read_socket_start():
     for p in sort_process:
         p.join()
 
+if __name__ == '__main__':
+    main()
