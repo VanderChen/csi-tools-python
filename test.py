@@ -1,4 +1,4 @@
-from read_socket.read_socket import read_socket_start
+from .read_socket.read_socket import read_socket_start
 
 def main():
     read_socket_start()
