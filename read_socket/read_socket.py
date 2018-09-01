@@ -3,7 +3,7 @@ import multiprocessing
 import time
 import logging
 
-from read_file.read_bf_file import read_file
+from ..read_file import read_bf_file
 
 
 def make_data(read_event, make_event, read_count, group_num):
@@ -23,7 +23,7 @@ def read_data(read_event, make_event, file_group, file_order, csi_list, logger):
     while True:
         read_event.wait()
         try:
-            csi = read_file("buf_data" + str(file_group) + str(file_order))
+            csi = read_bf_file.read_file("buf_data" + str(file_group) + str(file_order))
             if(len(csi) != 0):
                 csi_list.append(csi[0])
         except Exception as e:
