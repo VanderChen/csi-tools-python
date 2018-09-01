@@ -2,9 +2,11 @@ import ctypes
 import multiprocessing
 import time
 import logging
+import queue
 
 from ..read_file import read_bf_file
 
+out_data = queue.Queue()
 
 def make_data(read_event, make_event, read_count, group_num):
     while True:
@@ -51,9 +53,10 @@ def sort_data(csi_list, make_count, read_count_per_make, csi_lock, count_gap):
 
             csi_lock.acquire()
             sorted_data = sorted(csi_list, key=timestamp)
-            # for csi in sorted_data[:count]:
-            #     print(csi.timestamp_low)
-            #     pass
+            for csi in sorted_data[:count]:
+                out_data.put(csi)
+                # print(csi.timestamp_low)
+                pass
             out_count += count
             csi_list[:] = []
             csi_list.extend(sorted_data[count + 1:])
@@ -63,7 +66,7 @@ def sort_data(csi_list, make_count, read_count_per_make, csi_lock, count_gap):
 def read_socket_start():
     make_count = 10
     read_count_per_make = 8
-    sort_count = 1
+    sort_count = 2
     count_gap = 1000
 
     global so
