@@ -64,9 +64,9 @@ def sort_data(csi_list, make_count, read_count_per_make, csi_lock, count_gap):
 
 
 def read_socket_start():
-    make_count = 10
-    read_count_per_make = 8
-    sort_count = 2
+    make_count = 20
+    read_count_per_make = 6
+    sort_count = 1
     count_gap = 1000
 
     global so

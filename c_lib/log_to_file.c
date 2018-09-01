@@ -17,7 +17,7 @@
 #define MAX_PAYLOAD 2048
 #define SLOW_MSG_CNT 1
 #define FILE_ORDER_NUM 10
-#define FILE_GROUP_NUM 10
+#define FILE_GROUP_NUM 20
 
 
 int sock_fd = -1;							// the socket
